@@ -12,7 +12,7 @@ local PowerUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PowerUI")
 local PowerBack = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PowerBack")
 local PowerBeepSound = game:GetService("SoundService"):WaitForChild("PowerBeep")
 
-PowerBack.Button.Activated:Connect(function()
+PowerBack.Button.Activated:Connect(function() -- this is the back button when you press this its cancels the system
 	if not inElectric then return end
 	inElectric = false
 	PowerBack.Button.Visible = false
@@ -20,7 +20,7 @@ PowerBack.Button.Activated:Connect(function()
 	workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 end)
 
-local inNumberUsing = {
+local inNumberUsing = { -- all numbers table and these are off thats why i am did false
 	["01"] = false,
 	["02"] = false,
 	["03"] = false,
@@ -48,7 +48,7 @@ local SETTINGS = {
 local MAX_ROUND: number = 0
 local CURRENT_ROUND: number = 0
 
-local function getMyTrueNumbers(currentAnswers): number
+local function getMyTrueNumbers(currentAnswers): number -- this gets my true numbers check the real answers and my answers and gives my net
 	local correct, wrong = 0, 0
 	for i,v in pairs(currentAnswers) do
 		if inNumberUsing[i] == v then
@@ -60,12 +60,12 @@ local function getMyTrueNumbers(currentAnswers): number
 	return correct - wrong < 0 and 0 or correct- wrong, correct, wrong
 end
 
-local function makeCurrentString(number): string
+local function makeCurrentString(number): string -- it makes string like if number is < 10 and "0X"
 	number = tonumber(number)
 	return number < 10 and ("0%d"):format(number) or tostring(number)
 end
 
-local function shuffle(tbl: {any})
+local function shuffle(tbl: {any}) -- it shuffles the tables
 	for i = #tbl, 2, -1 do
 		local j = math.random(i)
 		tbl[i], tbl[j] = tbl[j], tbl[i]
@@ -73,7 +73,7 @@ local function shuffle(tbl: {any})
 	return tbl
 end
 
-local function closeorOpenCurrentButton(currentButton, isOpen: boolean)
+local function closeorOpenCurrentButton(currentButton, isOpen: boolean) -- these are button functions when you press this its on or off
 	if currentButton.EndButton:GetAttribute("isActive") == isOpen then return end
 	if not currentButton.EndButton:GetAttribute("isAvailable") then return end
 	
@@ -88,7 +88,7 @@ local function closeorOpenCurrentButton(currentButton, isOpen: boolean)
 	currentButton.EndButton:SetAttribute("isAvailable", true)
 end
 
-local function closeorOpenAll(isOpen: boolean)
+local function closeorOpenAll(isOpen: boolean) -- this is closes all buttons or opens all buttons
 	if not inElectric then return end
 	PowerUI.Bar.insideBar.Size = UDim2.new(0, 0, 1, 0)
 	for _,v in ipairs(Electric.Numbers:GetChildren()) do
@@ -106,7 +106,7 @@ end
 
 local oldAction = tick()
 
-local function Action(currentAnswers)
+local function Action(currentAnswers) -- this is when you touch part from server it FireClient and do this function
 	if inElectric then return end
 	if tick() - oldAction < 3 then return end
 	oldAction = tick()
@@ -124,7 +124,7 @@ local function Action(currentAnswers)
 	tween.Completed:Wait()
 	coroutine.resume(coroutine.create(function()
 		task.wait(1)
-		while true do
+		while true do -- this loop main event is looping the numbers and shuffling the numbers and printing all the numbers at the screen
 			if not inElectric then break end
 			if CURRENT_ROUND >= MAX_ROUND then closeorOpenAll(true) break end
 			PowerUI.Box.Visible = true
@@ -153,7 +153,7 @@ local function Action(currentAnswers)
 			PowerUI.Box.Visible = false
 			PowerUI.Bar.insideBar:TweenSize(UDim2.new(myTrueNumbers/10, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, myTrueNumbers/2.5)
 			task.wait(myTrueNumbers/10 ~= 0 and myTrueNumbers/2.5 + .3 or 3)
-			if myTrueNumbers > 0 and wrong == 0 and correct == 10 then
+			if myTrueNumbers > 0 and wrong == 0 and correct == 10 then -- if player did correct all the all buttons is get closed
 				CURRENT_ROUND += 1
 				PowerUI.Tour.Text = ("%d/%d"):format(CURRENT_ROUND, MAX_ROUND)
 
@@ -165,7 +165,7 @@ local function Action(currentAnswers)
 	end))
 end
 
-local function ButtonUp()
+local function ButtonUp() -- this is when you press moouse click it detects
 	if not inElectric then return end
 	if not Mouse.Target then return end
 	if not Mouse.Target.Parent then return end
