@@ -1,3 +1,5 @@
+--NOTE: THIS SYSTEM IS INSPIRED BY DOORS!
+
 local Players: Players = game:GetService("Players")
 local TweenService: TweenService = game:GetService("TweenService")
 
